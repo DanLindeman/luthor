@@ -11,7 +11,8 @@ class TestParser(unittest.TestCase):
 
     def test_parse_id(self):
         self.parser.current_token = Token("ID", "test_val", 0, 0)
-        self.assertTrue(self.parser.current_token.kind  == "ID")
+        self.assertTrue(self.parser.parse_id())
+
 
 
 
