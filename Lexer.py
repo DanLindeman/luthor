@@ -48,15 +48,15 @@ class Token(object):
         self.character_number = character_number
 
     def __str__(self):
-        return "<{0.kind}: {0.value}> @ \t({0.line_number},{0.character_number})".format(self)
+        return "<{0.kind}: {0.value}>".format(self)
 
 
 class Lexer(object):
 
     def __init__(self, path_to_file):
         self.text = Serializer().serialize(path_to_file)
-        self.alpha_numeric_with_underscores = re.compile("^[a-zA-Z0-9_\.]$")
-        self.valid_id = re.compile("^[a-zA-Z][a-zA-Z0-9_]*$")
+        self.alpha_numeric_with_underscores = re.compile("^[a-zA-Z0-9_\.\"\\\]$")
+        self.id_regex = re.compile("^[a-zA-Z0-9_\.\" \\\]$")
         self.character_index = 0
         self.current_character = self.text[self.character_index]
 
@@ -83,10 +83,10 @@ class Lexer(object):
                 return Token("EQUALS", "=", self.current_character.line_number, self.current_character.character_number - 1)
             elif self.current_character.character == '{':
                 self.consume()
-                return Token("RIGHT_CB","{", self.current_character.line_number, self.current_character.character_number - 1)
+                return Token("LEFT_CB","{", self.current_character.line_number, self.current_character.character_number - 1)
             elif self.current_character.character == '}':
                 self.consume()
-                return Token("LEFT_CB","}", self.current_character.line_number, self.current_character.character_number - 1)
+                return Token("RIGHT_CB","}", self.current_character.line_number, self.current_character.character_number - 1)
             elif self.current_character.character == ',':
                 self.consume()
                 return Token("COMMA",",", self.current_character.line_number, self.current_character.character_number - 1)
@@ -99,26 +99,25 @@ class Lexer(object):
             elif self.current_character.character == ';':
                 self.consume()
                 return Token("SEMICOLON",";", self.current_character.line_number, self.current_character.character_number - 1)
-            elif self.current_character.character == '"':
-                self.consume()
-                return Token("QUOTE","\"", self.current_character.line_number, self.current_character.character_number - 1)
             elif self.current_character.character == '@':
                 self.consume()
                 return Token("AT","@", self.current_character.line_number, self.current_character.character_number - 1)
             elif self.current_character.character == ':':
                 self.consume()
                 return Token("COLON",":", self.current_character.line_number, self.current_character.character_number - 1)
-            elif self.current_character.character == '"':
-                self.consume()
-                return Token("","\"", self.current_character.line_number, self.current_character.character_number - 1)
+            elif self.current_character.character == "\"":
+                # build as if we know it's going to just be a plain-old ID
+                lexeme = ""
+                while (self.id_regex.match(self.current_character.character) and self.current_character.character != "EOF"):
+                    lexeme += self.current_character.character
+                    self.consume()
+                return Token("ID", lexeme, self.current_character.line_number, self.current_character.character_number - len(lexeme))
             elif self.alpha_numeric_with_underscores.match(self.current_character.character):
                 lexeme = ""
                 while (self.alpha_numeric_with_underscores.match(self.current_character.character) and self.current_character.character != "EOF"):
                     lexeme += self.current_character.character
                     self.consume()
-                if self.numeric(lexeme):
-                    return Token("NUM", lexeme, self.current_character.line_number, self.current_character.character_number - len(lexeme))
-                elif lexeme == "strict":
+                if lexeme == "strict":
                     return Token("STRICT", 'strict', self.current_character.line_number, self.current_character.character_number - len(lexeme))
                 elif lexeme == "digraph":
                     return Token("DIGRAPH", "digraph", self.current_character.line_number, self.current_character.character_number - len(lexeme))
@@ -131,11 +130,7 @@ class Lexer(object):
                 elif lexeme == "edge":
                     return Token("EDGE", "edge", self.current_character.line_number, self.current_character.character_number - len(lexeme))
                 else:
-                    if self.valid_id.match(lexeme):
-                        return Token("ID", lexeme, self.current_character.line_number, self.current_character.character_number - len(lexeme))
-                    else:
-                        print("ERROR invalid ID.")
-                        sys.exit(1)
+                    return Token("ID", lexeme, self.current_character.line_number, self.current_character.character_number - len(lexeme))
             elif self.current_character.character == "-":
                 self.consume()
                 if self.current_character.character == '-':
@@ -147,18 +142,8 @@ class Lexer(object):
                 else:
                     print("ERROR: - followed by an unexpected token: " + self.current_character)
                     sys.exit(1)
-            elif self.current_character.character == "\\":
-                self.consume()
-                if self.current_character.character == "n":
-                    self.consume()
-                    return Token("NEWLINE", "\\n", self.current_character.line_number, self.current_character.character_number - 2)
-                else:
-                    print("ERROR: '\\' followed by an unexpected token: " +  self.current_character + " at line: " + self.current_character.line_number + " column: " + self.current_character.character_number)
-                    sys.exit(1)
             else:
-                print("ERROR: '\\' followed by an unexpected token: " +  self.current_character + " at line: " + self.current_character.line_number + " column: " + self.current_character.character_number)
-                sys.exit(1)
-
+                raise Exception("Seomthinw whent shad")
         return Token("EOF", "EOF", self.current_character.line_number, self.current_character.character_number)
 
 

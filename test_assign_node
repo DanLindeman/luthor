@@ -1,2 +1,3 @@
+main [shape=box, thing=stuff];
 main -> parse;
 execute -> compare;
