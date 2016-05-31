@@ -53,7 +53,7 @@ class Parser(object):
             self.parse_statement()
 
     def parse_statement(self):
-        if self.current_token.kind == "NODE" or (self.current_token.kind == "EDGE") or (self.current_token.kind == "GRAPH"):
+        if (self.current_token.kind == "NODE") or (self.current_token.kind == "EDGE") or (self.current_token.kind == "GRAPH"):
             self.parse_node_statement()
         elif self.current_token.kind == "ID":
             self.accept(self.current_token, "ID")
@@ -61,6 +61,18 @@ class Parser(object):
                 self.parse_edge_statement()
             elif self.current_token.kind == "LEFT_SB":
                 self.parse_node_creation()
+        elif self.current_token.kind == "SUBGRAPH":
+            self.parse_subgraph()
+        else:
+            raise ParserException(self.current_token)
+
+    def parse_subgraph(self):
+        if self.current_token.kind == "SUBGRAPH":
+            self.accept(self.current_token, "SUBGRAPH")
+            self.parse_id()
+            self.accept(self.current_token, "LEFT_CB")
+            self.parse_statement_list()
+            self.accept(self.current_token, "RIGHT_CB")
         else:
             raise ParserException(self.current_token)
 
