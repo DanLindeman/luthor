@@ -1,4 +1,4 @@
-digraph G {
+strict digraph G {
     main [shape=box]; /* this is a comment */
     main -> parse [weight=8]; /**/
     parse -> execute;
