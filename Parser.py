@@ -61,8 +61,18 @@ class Parser(object):
                 self.parse_edge_statement()
             elif self.current_token.kind == "LEFT_SB":
                 self.parse_node_creation()
+            elif self.current_token.kind == "EQUALS":
+                self.parse_single_assignment()
         elif self.current_token.kind == "SUBGRAPH":
             self.parse_subgraph()
+        else:
+            raise ParserException(self.current_token)
+
+    def parse_single_assignment(self):
+        if self.current_token.kind == "EQUALS":
+            self.accept(self.current_token, "EQUALS")
+            self.accept(self.current_token, "ID")
+            self.parse_semicolon()
         else:
             raise ParserException(self.current_token)
 
