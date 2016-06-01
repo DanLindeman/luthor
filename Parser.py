@@ -20,7 +20,7 @@ class Parser(object):
             raise ParserException(self.current_token)
 
     def accept(self, token, token_kind):
-        if token.kind == token_kind: 
+        if token.kind == token_kind:
             self.current_token = self.lexer.next_token()
         else:
             raise ParserException(self.current_token)
@@ -118,6 +118,8 @@ class Parser(object):
     def parse_semicolon(self):
         if self.current_token.kind == "SEMICOLON":
             self.current_token = self.lexer.next_token()
+        else:
+            raise ParserException(self.current_token)
 
     def parse_atttribute_list(self):
         if self.current_token.kind == "LEFT_SB":
