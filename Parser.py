@@ -121,6 +121,7 @@ class Parser(object):
             self.accept(self.current_token, "LEFT_SB")
             self.parse_assignment_list()
             self.accept(self.current_token, "RIGHT_SB")
+            self.parse_semicolon()
 
     def parse_assignment_list(self):
         self.parse_assignment()
@@ -136,6 +137,7 @@ class Parser(object):
             self.accept(self.current_token, "ID")
             self.accept(self.current_token, "EQUALS")
             self.accept(self.current_token, "ID")
+            self.parse_semicolon()
         else:
             raise ParserException(self.current_token)
 

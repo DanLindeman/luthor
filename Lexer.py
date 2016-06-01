@@ -143,7 +143,7 @@ class Lexer(object):
                     print("ERROR: - followed by an unexpected token: " + self.current_character)
                     sys.exit(1)
             else:
-                raise Exception("Seomthinw whent shad")
+                raise Exception("Something went wrong")
         return Token("EOF", "EOF", self.current_character.line_number, self.current_character.character_number)
 
 
