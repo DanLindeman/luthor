@@ -12,7 +12,7 @@ class Parser(object):
 
     def parse(self):
         self.parse_strict()
-        self.parse_id()
+        self.parse_optional_id()
         if self.current_token.kind == "DIGRAPH":
             self.parse_digraph()
         elif self.current_token.kind == "GRAPH":
@@ -30,7 +30,7 @@ class Parser(object):
         if self.current_token.kind == "STRICT":
             self.accept(self.current_token, "STRICT")
 
-    def parse_id(self):
+    def parse_optional_id(self):
         if self.current_token.kind == "ID":
             self.accept(self.current_token, "ID")
 
@@ -51,6 +51,7 @@ class Parser(object):
     def parse_statement_list(self):
         while self.current_token.kind != "RIGHT_CB":
             self.parse_statement()
+            self.parse_semicolon()
 
     def parse_statement(self):
         if (self.current_token.kind == "NODE") or (self.current_token.kind == "EDGE") or (self.current_token.kind == "GRAPH"):
@@ -72,14 +73,13 @@ class Parser(object):
         if self.current_token.kind == "EQUALS":
             self.accept(self.current_token, "EQUALS")
             self.accept(self.current_token, "ID")
-            self.parse_semicolon()
         else:
             raise ParserException(self.current_token)
 
     def parse_subgraph(self):
         if self.current_token.kind == "SUBGRAPH":
             self.accept(self.current_token, "SUBGRAPH")
-            self.parse_id()
+            self.parse_optional_id()
             self.accept(self.current_token, "LEFT_CB")
             self.parse_statement_list()
             self.accept(self.current_token, "RIGHT_CB")
@@ -88,10 +88,7 @@ class Parser(object):
 
     def parse_node_creation(self):
         if self.current_token.kind == "LEFT_SB":
-            self.accept(self.current_token, "LEFT_SB")
-            self.parse_assignment_list()
-            self.accept(self.current_token, "RIGHT_SB")
-            self.parse_semicolon()
+            self.parse_atttribute_list()
         else:
             raise ParserException(self.current_token)
 
@@ -99,7 +96,6 @@ class Parser(object):
         if self.current_token.kind == "NODE":
             self.accept(self.current_token, "NODE")
             self.parse_atttribute_list()
-            self.parse_semicolon()
         else:
             raise ParserException(self.current_token)
 
@@ -108,7 +104,6 @@ class Parser(object):
         if self.current_token.kind == "ID":
             self.accept(self.current_token, "ID")
             self.parse_atttribute_list()
-            self.parse_semicolon()
         else:
             raise ParserException(self.current_token)
 
@@ -121,7 +116,6 @@ class Parser(object):
             self.accept(self.current_token, "LEFT_SB")
             self.parse_assignment_list()
             self.accept(self.current_token, "RIGHT_SB")
-            self.parse_semicolon()
 
     def parse_assignment_list(self):
         self.parse_assignment()
@@ -137,7 +131,6 @@ class Parser(object):
             self.accept(self.current_token, "ID")
             self.accept(self.current_token, "EQUALS")
             self.accept(self.current_token, "ID")
-            self.parse_semicolon()
         else:
             raise ParserException(self.current_token)
 
@@ -151,7 +144,7 @@ class Parser(object):
 
 class ParserException(Exception):
     def __init__(self, current_token):
-        message = "\n\tUnexpected Token {0} \n\ton line: {0.line_number} \n\tcharacter: {0.character_number}".format(current_token)
+        message = "\n\tUnexpected Token {0}\n\ton line: {0.line_number} \n\tcolumn: {0.character_number}".format(current_token)
         super(ParserException, self).__init__(message)
 
 

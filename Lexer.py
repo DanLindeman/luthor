@@ -55,7 +55,7 @@ class Lexer(object):
 
     def __init__(self, path_to_file):
         self.text = Serializer().serialize(path_to_file)
-        self.alpha_numeric_with_underscores = re.compile("^[a-zA-Z0-9_\.\"\\\]$")
+        self.keyword_regex = re.compile("^[a-zA-Z0-9_\.\"\\\]$")
         self.id_regex = re.compile("^[a-zA-Z0-9_\.\" \\\]$")
         self.character_index = 0
         self.current_character = self.text[self.character_index]
@@ -112,9 +112,9 @@ class Lexer(object):
                     lexeme += self.current_character.character
                     self.consume()
                 return Token("ID", lexeme, self.current_character.line_number, self.current_character.character_number - len(lexeme))
-            elif self.alpha_numeric_with_underscores.match(self.current_character.character):
+            elif self.keyword_regex.match(self.current_character.character):
                 lexeme = ""
-                while (self.alpha_numeric_with_underscores.match(self.current_character.character) and self.current_character.character != "EOF"):
+                while (self.keyword_regex.match(self.current_character.character) and self.current_character.character != "EOF"):
                     lexeme += self.current_character.character
                     self.consume()
                 if lexeme == "strict":
@@ -140,10 +140,9 @@ class Lexer(object):
                     self.consume()
                     return Token("DIRECTED_EDGE","->", self.current_character.line_number, self.current_character.character_number - 2)
                 else:
-                    print("ERROR: - followed by an unexpected token: " + self.current_character)
-                    sys.exit(1)
+                    raise Exception("ERROR: '-' followed by an unexpected token: '{0}'".format(self.current_character.character))
             else:
-                raise Exception("Something went wrong")
+                raise Exception("ERROR: Character '{0}' not in Lexicon.".format(self.current_character.character))
         return Token("EOF", "EOF", self.current_character.line_number, self.current_character.character_number)
 
 
