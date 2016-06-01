@@ -12,7 +12,6 @@ class Parser(object):
 
     def parse(self):
         self.parse_strict()
-        self.parse_optional_id()
         if self.current_token.kind == "DIGRAPH":
             self.parse_digraph()
         elif self.current_token.kind == "GRAPH":
@@ -26,32 +25,25 @@ class Parser(object):
         else:
             raise ParserException(self.current_token)
 
-    def parse_strict(self):
-        if self.current_token.kind == "STRICT":
-            self.accept(self.current_token, "STRICT")
-
-    def parse_optional_id(self):
-        if self.current_token.kind == "ID":
-            self.accept(self.current_token, "ID")
-
     def parse_digraph(self):
-        self.accept(self.current_token, "DIGRAPH")
-        self.accept(self.current_token, "ID")
-        self.accept(self.current_token, "LEFT_CB")
-        self.parse_statement_list()
-        self.accept(self.current_token, "RIGHT_CB")
+        if self.current_token.kind == "DIGRAPH":
+            self.accept(self.current_token, "DIGRAPH")
+            self.parse_optional_id()
+            self.accept(self.current_token, "LEFT_CB")
+            self.parse_statement_list()
+            self.accept(self.current_token, "RIGHT_CB")
+        else:
+            raise ParserException(self.current_token)
 
     def parse_graph(self):
-        self.accept(self.current_token, "GRAPH")
-        self.accept(self.current_token, "ID")
-        self.accept(self.current_token, "LEFT_CB")
-        self.parse_statement_list()
-        self.accept(self.current_token, "RIGHT_CB")
-
-    def parse_statement_list(self):
-        while self.current_token.kind != "RIGHT_CB":
-            self.parse_statement()
-            self.parse_semicolon()
+        if self.current_token.kind == "GRAPH":
+            self.accept(self.current_token, "GRAPH")
+            self.parse_optional_id()
+            self.accept(self.current_token, "LEFT_CB")
+            self.parse_statement_list()
+            self.accept(self.current_token, "RIGHT_CB")
+        else:
+            raise ParserException(self.current_token)
 
     def parse_statement(self):
         if (self.current_token.kind == "NODE") or (self.current_token.kind == "EDGE") or (self.current_token.kind == "GRAPH"):
@@ -107,6 +99,22 @@ class Parser(object):
         else:
             raise ParserException(self.current_token)
 
+    def parse_assignment(self):
+        if self.current_token.kind == "ID":
+            self.accept(self.current_token, "ID")
+            self.accept(self.current_token, "EQUALS")
+            self.accept(self.current_token, "ID")
+        else:
+            raise ParserException(self.current_token)
+
+    def parse_edge_type(self):
+        if self.current_token.kind == "DIRECTED_EDGE":
+            self.accept(self.current_token, "DIRECTED_EDGE")
+        elif self.current_token.kind == "UNDIRECTED_EDGE":
+            self.accept(self.current_token, "UNDIRECTED_EDGE")
+        else:
+            raise ParserException(self.current_token)
+
     def parse_semicolon(self):
         if self.current_token.kind == "SEMICOLON":
             self.current_token = self.lexer.next_token()
@@ -126,21 +134,19 @@ class Parser(object):
             self.accept(self.current_token, "SEMICOLON")
             self.parse_assignment_list()
 
-    def parse_assignment(self):
+    def parse_strict(self):
+        if self.current_token.kind == "STRICT":
+            self.accept(self.current_token, "STRICT")
+
+    def parse_optional_id(self):
         if self.current_token.kind == "ID":
             self.accept(self.current_token, "ID")
-            self.accept(self.current_token, "EQUALS")
-            self.accept(self.current_token, "ID")
-        else:
-            raise ParserException(self.current_token)
 
-    def parse_edge_type(self):
-        if self.current_token.kind == "DIRECTED_EDGE":
-            self.accept(self.current_token, "DIRECTED_EDGE")
-        elif self.current_token.kind == "UNDIRECTED_EDGE":
-            self.accept(self.current_token, "UNDIRECTED_EDGE")
-        else:
-            raise ParserException(self.current_token)
+    def parse_statement_list(self):
+        while self.current_token.kind != "RIGHT_CB":
+            self.parse_statement()
+            self.parse_semicolon()
+
 
 class ParserException(Exception):
     def __init__(self, current_token):
