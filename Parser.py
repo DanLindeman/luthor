@@ -15,20 +15,18 @@ class Parser(object):
 
     def print_nodes(self):
         for node in self.ast_nodes.keys():
-            print(self.ast_nodes[node])
+            print(node, self.ast_nodes[node])
 
     def add_parent_child(self, id_node, current_token):
-        if id_node not in self.ast_nodes.keys():
-            self.ast_nodes[id_node] = {id_node: {"children": []}}
-
-        if current_token not in self.ast_nodes.keys():
-            self.ast_nodes[current_token] = {current_token: {"children": []}}
-            if current_token not in self.ast_nodes[id_node][id_node]["children"]:
-                self.ast_nodes[id_node][id_node]["children"].append(current_token)
+        self.add_node(id_node)
+        self.add_node(current_token)
+        if current_token not in self.ast_nodes[id_node]["children"]:
+            self.ast_nodes[id_node]["children"].append(current_token)
 
     def add_node(self, id_node):
         if id_node not in self.ast_nodes.keys():
-            self.ast_nodes[id_node] = {id_node: {"children": []}}
+            self.ast_nodes[id_node] = {}
+            self.ast_nodes[id_node]["children"] = []
 
     def parse(self):
         self.parse_strict()
@@ -182,4 +180,3 @@ class ParserException(Exception):
 if __name__ == "__main__":
     p = Parser("myFile")
     p.parse_file()
-    # p.print_nodes()
