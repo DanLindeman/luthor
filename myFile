@@ -5,6 +5,7 @@ digraph G {
     main -> init [style=dotted]; /* missing the target node ID */
     main -> cleanup;
     execute -> make_string;
+    make_string -> compare;
     init -> make_string;
     main -> printf [style=bold, label="100 times"]; /* missing value */
     make_string [label="make a\nstring"];

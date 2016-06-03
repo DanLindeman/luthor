@@ -11,7 +11,7 @@ class Parser(object):
     def parse_file(self):
         self.current_token = self.lexer.next_token()
         self.parse()
-        self.print_nodes()
+        return self.ast_nodes
 
     def print_nodes(self):
         for node in self.ast_nodes.keys():
@@ -180,3 +180,4 @@ class ParserException(Exception):
 if __name__ == "__main__":
     p = Parser("myFile")
     p.parse_file()
+    p.print_nodes()
