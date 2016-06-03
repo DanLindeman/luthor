@@ -1,14 +1,34 @@
 from Lexer import Lexer
+from Node import Node
 
 class Parser(object):
 
     def __init__(self, path_to_file):
         self.lexer = Lexer(path_to_file)
         self.path_to_file = path_to_file
+        self.ast_nodes = {}
 
     def parse_file(self):
         self.current_token = self.lexer.next_token()
         self.parse()
+        self.print_nodes()
+
+    def print_nodes(self):
+        for node in self.ast_nodes.keys():
+            print(self.ast_nodes[node])
+
+    def add_parent_child(self, id_node, current_token):
+        if id_node not in self.ast_nodes.keys():
+            self.ast_nodes[id_node] = {id_node: {"children": []}}
+
+        if current_token not in self.ast_nodes.keys():
+            self.ast_nodes[current_token] = {current_token: {"children": []}}
+            if current_token not in self.ast_nodes[id_node][id_node]["children"]:
+                self.ast_nodes[id_node][id_node]["children"].append(current_token)
+
+    def add_node(self, id_node):
+        if id_node not in self.ast_nodes.keys():
+            self.ast_nodes[id_node] = {id_node: {"children": []}}
 
     def parse(self):
         self.parse_strict()
@@ -49,11 +69,12 @@ class Parser(object):
         if (self.current_token.kind == "NODE") or (self.current_token.kind == "EDGE") or (self.current_token.kind == "GRAPH"):
             self.parse_node_statement()
         elif self.current_token.kind == "ID":
+            id_node = self.current_token.value
             self.accept(self.current_token, "ID")
             if (self.current_token.kind == "DIRECTED_EDGE") or (self.current_token.kind == "UNDIRECTED_EDGE"):
-                self.parse_edge_statement()
+                self.parse_edge_statement(id_node)
             elif self.current_token.kind == "LEFT_SB":
-                self.parse_node_creation()
+                self.parse_node_creation(id_node)
             elif self.current_token.kind == "EQUALS":
                 self.parse_single_assignment()
         elif self.current_token.kind == "SUBGRAPH":
@@ -78,7 +99,8 @@ class Parser(object):
         else:
             raise ParserException(self.current_token)
 
-    def parse_node_creation(self):
+    def parse_node_creation(self, id_node):
+        self.add_node(id_node)
         if self.current_token.kind == "LEFT_SB":
             self.parse_atttribute_list()
         else:
@@ -91,9 +113,10 @@ class Parser(object):
         else:
             raise ParserException(self.current_token)
 
-    def parse_edge_statement(self):
+    def parse_edge_statement(self, id_node):
         self.parse_edge_type()
         if self.current_token.kind == "ID":
+            self.add_parent_child(id_node, self.current_token.value)
             self.accept(self.current_token, "ID")
             self.parse_atttribute_list()
         else:
@@ -159,3 +182,4 @@ class ParserException(Exception):
 if __name__ == "__main__":
     p = Parser("myFile")
     p.parse_file()
+    # p.print_nodes()

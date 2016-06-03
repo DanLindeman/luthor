@@ -1,15 +1,13 @@
-strict digraph G {
-    main [shape=box]; /* this is a comment */
-    main -> parse [weight=8]; /**/
+digraph G {
+    main [shape=box]; /* missing the closing ] */
+    main -> parse [weight=8];
     parse -> execute;
-    main -> init [style=dotted];
+    main -> init [style=dotted]; /* missing the target node ID */
     main -> cleanup;
     execute -> make_string;
-    init -> make_string; //this is also one
-    main -> printf [style=bold,label="100 times"];
+    init -> make_string;
+    main -> printf [style=bold, label="100 times"]; /* missing value */
     make_string [label="make a\nstring"];
     node [shape=box,style=filled,color=".7 .3 1.0"];
     execute -> compare;
-    subgraph THING {}
-    a = b;
  }
