@@ -10,7 +10,8 @@ class Graph(object):
 
     def convert_hash_to_graph(self):
         for node in self.node_hash:
-            self.create(node, self.node_hash[node]["children"])
+            self.nodes.append(self.create(node, self.node_hash[node]["children"]))
+        return self.nodes
 
     def create(self, node, children):
         current_node = Node(node)
@@ -22,15 +23,11 @@ class Graph(object):
             else:
                 child_node = Node(self.node_hash[child])
                 current_node.add_child(child_node)
-
-            
-        print(current_node)
-
-    def get_root(self):
-        pass
-
+        return current_node
 
 
 if __name__ == "__main__":
     g = Graph()
-    g.convert_hash_to_graph()
+    nodes = g.convert_hash_to_graph()
+    for node in nodes:
+        print(node)
