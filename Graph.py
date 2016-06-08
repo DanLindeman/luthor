@@ -23,11 +23,20 @@ class Graph(object):
             else:
                 child_node = Node(self.node_hash[child])
                 current_node.add_child(child_node)
+
         return current_node
+
+    def print_nodes(self, nod):
+        for node in self.nodes:
+            print(node)
+            for child in node.children:
+                self.print_nodes(child)
+
+
 
 
 if __name__ == "__main__":
     g = Graph()
     nodes = g.convert_hash_to_graph()
     for node in nodes:
-        print(node)
+        print(node.to_string_tree())
