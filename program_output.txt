@@ -1,0 +1,85 @@
+daniellindeman@Daniels-MacBook-Pro(master):~/Programs/luthor
+] python3 Parser.py
+Traceback (most recent call last):
+  File "Parser.py", line 161, in <module>
+    p.parse_file()
+  File "Parser.py", line 11, in parse_file
+    self.parse()
+  File "Parser.py", line 16, in parse
+    self.parse_digraph()
+  File "Parser.py", line 33, in parse_digraph
+    self.parse_statement_list()
+  File "Parser.py", line 149, in parse_statement_list
+    self.parse_statement()
+  File "Parser.py", line 56, in parse_statement
+    self.parse_node_creation()
+  File "Parser.py", line 83, in parse_node_creation
+    self.parse_atttribute_list()
+  File "Parser.py", line 127, in parse_atttribute_list
+    self.parse_assignment_list()
+  File "Parser.py", line 137, in parse_assignment_list
+    self.parse_assignment_list()
+  File "Parser.py", line 131, in parse_assignment_list
+    self.parse_assignment()
+  File "Parser.py", line 105, in parse_assignment
+    self.accept(self.current_token, "EQUALS")
+  File "Parser.py", line 26, in accept
+    raise ParserException(self.current_token)
+__main__.ParserException:
+    Unexpected Token <DIRECTED_EDGE: ->>
+    on line: 3
+    column: 10
+daniellindeman@Daniels-MacBook-Pro(master):~/Programs/luthor
+] python3 Parser.py
+Traceback (most recent call last):
+  File "Parser.py", line 161, in <module>
+    p.parse_file()
+  File "Parser.py", line 11, in parse_file
+    self.parse()
+  File "Parser.py", line 16, in parse
+    self.parse_digraph()
+  File "Parser.py", line 33, in parse_digraph
+    self.parse_statement_list()
+  File "Parser.py", line 149, in parse_statement_list
+    self.parse_statement()
+  File "Parser.py", line 54, in parse_statement
+    self.parse_edge_statement()
+  File "Parser.py", line 100, in parse_edge_statement
+    raise ParserException(self.current_token)
+__main__.ParserException:
+    Unexpected Token <LEFT_SB: [>
+    on line: 5
+    column: 14
+daniellindeman@Daniels-MacBook-Pro(master):~/Programs/luthor
+] python3 Parser.py
+Traceback (most recent call last):
+  File "Parser.py", line 161, in <module>
+    p.parse_file()
+  File "Parser.py", line 11, in parse_file
+    self.parse()
+  File "Parser.py", line 16, in parse
+    self.parse_digraph()
+  File "Parser.py", line 33, in parse_digraph
+    self.parse_statement_list()
+  File "Parser.py", line 149, in parse_statement_list
+    self.parse_statement()
+  File "Parser.py", line 54, in parse_statement
+    self.parse_edge_statement()
+  File "Parser.py", line 98, in parse_edge_statement
+    self.parse_atttribute_list()
+  File "Parser.py", line 127, in parse_atttribute_list
+    self.parse_assignment_list()
+  File "Parser.py", line 134, in parse_assignment_list
+    self.parse_assignment_list()
+  File "Parser.py", line 131, in parse_assignment_list
+    self.parse_assignment()
+  File "Parser.py", line 106, in parse_assignment
+    self.accept(self.current_token, "ID")
+  File "Parser.py", line 26, in accept
+    raise ParserException(self.current_token)
+__main__.ParserException:
+    Unexpected Token <RIGHT_SB: ]>
+    on line: 9
+    column: 39
+daniellindeman@Daniels-MacBook-Pro(master):~/Programs/luthor
+] python3 Parser.py
