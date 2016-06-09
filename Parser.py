@@ -6,7 +6,7 @@ class Parser(object):
     def __init__(self, path_to_file):
         self.lexer = Lexer(path_to_file)
         self.path_to_file = path_to_file
-        self.ast_nodes = {}
+        self.ast_nodes = []
 
     def parse_file(self):
         self.current_token = self.lexer.next_token()
@@ -14,19 +14,28 @@ class Parser(object):
         return self.ast_nodes
 
     def print_nodes(self):
-        for node in self.ast_nodes.keys():
-            print(node, self.ast_nodes[node])
+        for node in self.ast_nodes:
+            print(node.value, node.children)
+
+    def get_node_by_name(self, name):
+        for node in self.ast_nodes:
+            if node.value == name:
+                return node
 
     def add_parent_child(self, id_node, current_token):
         self.add_node(id_node)
         self.add_node(current_token)
-        if current_token not in self.ast_nodes[id_node]["children"]:
-            self.ast_nodes[id_node]["children"].append(current_token)
+        parent = self.get_node_by_name(id_node)
+        parent.add_child(self.get_node_by_name(current_token))
 
     def add_node(self, id_node):
-        if id_node not in self.ast_nodes.keys():
-            self.ast_nodes[id_node] = {}
-            self.ast_nodes[id_node]["children"] = []
+        extant_nodes = [node.value for node in self.ast_nodes]
+        if (len(self.ast_nodes) == 0):
+            self.ast_nodes.append(Node(id_node))
+        else:
+            if id_node not in extant_nodes:
+                self.ast_nodes.append(Node(id_node))
+
 
     def parse(self):
         self.parse_strict()

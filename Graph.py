@@ -5,38 +5,29 @@ class Graph(object):
 
     def __init__(self):
         parser = Parser("myFile")
-        self.node_hash = parser.parse_file()
-        self.nodes = []
+        self.nodes = parser.parse_file()
+        self.printed_nodes = []
 
-    def convert_hash_to_graph(self):
-        for node in self.node_hash:
-            self.nodes.append(self.create(node, self.node_hash[node]["children"]))
-        return self.nodes
-
-    def create(self, node, children):
-        current_node = Node(node)
-
-        for child in children:
-            if child not in self.nodes:
-                child_node = Node(child)
-                current_node.add_child(child_node)
-            else:
-                child_node = Node(self.node_hash[child])
-                current_node.add_child(child_node)
-
-        return current_node
-
-    def print_nodes(self, nod):
+    def print_nodes(self):
         for node in self.nodes:
-            print(node)
+            print(node.value + "\n[")
             for child in node.children:
-                self.print_nodes(child)
+                print("\t" + child.value)
+            print("]")
 
-
+    def experiment(self):
+        #Sanity check that this actually produces a connected graph.
+        for node in self.nodes:
+            if node.value == "main":
+                main = node
+        print(main.value)
+        for child in main.children:
+            print("\t" + child.value)
+            for grandchild in child.children:
+                print("\t\t" + grandchild.value)
 
 
 if __name__ == "__main__":
     g = Graph()
-    nodes = g.convert_hash_to_graph()
-    for node in nodes:
-        print(node.to_string_tree())
+    g.print_nodes()
+    # g.experiment()

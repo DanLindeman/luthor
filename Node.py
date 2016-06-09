@@ -6,22 +6,12 @@ class Node(object):
         self.value = value
         self.children = []
 
-    # def __str__(self):
-    #     return "{0.value}".format(self)
+    def __str__(self):
+        return "{0.value}".format(self)
 
     def add_child(self, child):
         if child not in self.children:
             self.children.append(child)
-            
-
-    # def print_node(self, index):
-    #     if (len(self.children) > 0):
-    #         for child in self.children:
-    #             child.print_node(index + 1)
-    #     else:
-    #         print(self.value)
-
-
 
     def to_string_tree(self):
          """Build a string representing the entire tree."""
