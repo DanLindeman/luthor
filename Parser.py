@@ -7,6 +7,7 @@ class Parser(object):
         self.lexer = Lexer(path_to_file)
         self.path_to_file = path_to_file
         self.ast_nodes = {}
+        self.root = None
 
     def parse_file(self):
         self.current_token = self.lexer.next_token()

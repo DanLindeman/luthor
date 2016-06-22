@@ -6,8 +6,8 @@ class Node(object):
         self.value = value
         self.children = []
 
-    # def __str__(self):
-    #     return "{0.value}".format(self)
+    def __str__(self):
+        return "{0.value}".format(self)
 
     def add_child(self, child):
         if child not in self.children:
