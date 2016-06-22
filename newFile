@@ -1,0 +1,7 @@
+digraph G {
+    main [shape=box]; /* missing the closing ] */
+    main -> parse [weight=8];
+    parse -> execute;
+
+    execute -> something;
+ }

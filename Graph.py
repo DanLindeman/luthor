@@ -26,11 +26,11 @@ class Graph(object):
 
         return current_node
 
-    def print_nodes(self):
+    def print_nodes(self, nod):
         for node in self.nodes:
             print(node)
             for child in node.children:
-                print("\t" + child.__str__())
+                self.print_nodes(child)
 
 
 
@@ -38,4 +38,5 @@ class Graph(object):
 if __name__ == "__main__":
     g = Graph()
     nodes = g.convert_hash_to_graph()
-    g.print_nodes()
+    for node in nodes:
+        print(node.to_string_tree())
